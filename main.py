@@ -14,7 +14,9 @@ assets.load_sprites()
 
 sprites = pygame.sprite.LayeredUpdates()
 
-Background(sprites)
+Background(0, sprites)
+Background(1, sprites)
+
 
 while running:
     for event in pygame.event.get():
@@ -24,6 +26,7 @@ while running:
     screen.fill("pink")
 
     sprites.draw(screen)
+    sprites.update()
 
     pygame.display.flip()
     clock.tick(configs.FPS)
