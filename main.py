@@ -8,6 +8,7 @@ from objects.column import Column
 from objects.floor import Floor
 from objects.game_over import GameOver
 from objects.game_start import GameStart
+from objects.score import Score
 
 pygame.init()
 
@@ -17,7 +18,6 @@ column_create_event = pygame.USEREVENT
 running = True
 gameOver = False
 gameStarted = False
-score = 0
 
 assets.load_sprites()
 
@@ -30,10 +30,10 @@ def create_sprites():
     Floor(0, sprites)
     Floor(1, sprites)
 
-    return Bird(sprites), GameStart(sprites)
+    return Bird(sprites), GameStart(sprites), Score(sprites)
 
 
-bird, game_start_message = create_sprites()
+bird, game_start_message, score = create_sprites()
 
 while running:
     for event in pygame.event.get():
@@ -55,7 +55,7 @@ while running:
                 gameOver = False
                 gameStarted = False
                 sprites.empty()
-                bird, game_start_message = create_sprites()
+                bird, game_start_message, score = create_sprites()
         # when pressed space do bird's move
         bird.handle_event(event)
 
@@ -78,9 +78,7 @@ while running:
     # increase the score if the bird pass the pipe
     for sprite in sprites:
         if type(sprite) is Column and sprite.is_passed():
-            score += 1
-
-    print(score)
+            score.value += 1
 
     pygame.display.flip()
     clock.tick(configs.FPS)
