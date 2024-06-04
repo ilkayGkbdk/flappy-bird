@@ -4,10 +4,12 @@ import pygame.sprite
 
 import assets
 import configs
+from layer import Layer
 
 
 class Column(pygame.sprite.Sprite):
     def __init__(self, *groups):
+        self._layer = Layer.OBSTACLE
         self.gap = 100
 
         self.sprite = assets.get_sprites("pipe-green")
