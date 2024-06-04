@@ -20,6 +20,7 @@ gameOver = False
 gameStarted = False
 
 assets.load_sprites()
+assets.load_audios()
 
 sprites = pygame.sprite.LayeredUpdates()
 
@@ -46,27 +47,32 @@ while running:
         # check if user press space
         if event.type == pygame.KEYDOWN:
             # check if not gameStarted and not gameOver when pressed space and start game
-            if event.key == pygame.K_SPACE and not gameStarted and not gameOver:
-                gameStarted = True
-                game_start_message.kill()
-                pygame.time.set_timer(column_create_event, 1500)
+            if event.key == pygame.K_SPACE and not gameOver:
+                if not gameStarted:
+                    gameStarted = True
+                    game_start_message.kill()
+                    pygame.time.set_timer(column_create_event, 1500)
+                else:
+                    # when pressed space do bird's move
+                    bird.handle_event(event)
+                    assets.play_audio("wing")
+
             # check if gameOver and user press ESCAPE so restart the game
-            if event.key == pygame.K_ESCAPE and gameOver:
+            elif event.key == pygame.K_ESCAPE and gameOver:
                 gameOver = False
                 gameStarted = False
                 sprites.empty()
                 bird, game_start_message, score = create_sprites()
-        # when pressed space do bird's move
-        bird.handle_event(event)
 
     screen.fill(0)
 
     # check bird's collision with pipe
-    if bird.check_collision(sprites):
+    if bird.check_collision(sprites) and not gameOver:
         gameOver = True
         gameStarted = False
         GameOver(sprites)
         pygame.time.set_timer(column_create_event, 0)
+        assets.play_audio("hit")
 
     # update the screen if it's not gameOver
     if gameStarted and not gameOver:
@@ -79,6 +85,7 @@ while running:
     for sprite in sprites:
         if type(sprite) is Column and sprite.is_passed():
             score.value += 1
+            assets.play_audio("point")
 
     pygame.display.flip()
     clock.tick(configs.FPS)
