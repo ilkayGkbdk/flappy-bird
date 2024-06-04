@@ -14,6 +14,7 @@ clock = pygame.time.Clock()
 column_create_event = pygame.USEREVENT
 running = True
 gameOver = False
+score = 0
 
 assets.load_sprites()
 
@@ -45,6 +46,12 @@ while running:
     if not gameOver:
         sprites.update()
     sprites.draw(screen)
+
+    for sprite in sprites:
+        if type(sprite) is Column and sprite.is_passed():
+            score += 1
+
+    print(score)
 
     pygame.display.flip()
     clock.tick(configs.FPS)
