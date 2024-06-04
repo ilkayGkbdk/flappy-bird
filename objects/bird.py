@@ -3,6 +3,8 @@ import pygame.sprite
 import assets
 import configs
 from layer import Layer
+from objects.column import Column
+from objects.floor import Floor
 
 
 class Bird(pygame.sprite.Sprite):
@@ -17,6 +19,8 @@ class Bird(pygame.sprite.Sprite):
 
         self.image = self.images[0]
         self.rect = self.image.get_rect(topleft=(-50, 50))
+
+        self.mask = pygame.mask.from_surface(self.image)
 
         self.flap = 0
 
@@ -36,3 +40,12 @@ class Bird(pygame.sprite.Sprite):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             self.flap = 0
             self.flap -= 6
+
+    def check_collision(self, sprites):
+        for sprite in sprites:
+            if ((type(sprite) is Column or type(sprite) is Floor) and
+                    (sprite.mask.overlap(self.mask, (self.rect.x - sprite.rect.x, self.rect.y - sprite.rect.y)))):
+                return True
+            if self.rect.bottom < 0:
+                return True
+        return False

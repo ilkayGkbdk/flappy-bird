@@ -13,6 +13,7 @@ screen = pygame.display.set_mode((configs.SCREEN_WIDTH, configs.SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 column_create_event = pygame.USEREVENT
 running = True
+gameOver = False
 
 assets.load_sprites()
 
@@ -38,8 +39,12 @@ while running:
 
     screen.fill(0)
 
+    if bird.check_collision(sprites):
+        gameOver = True
+
+    if not gameOver:
+        sprites.update()
     sprites.draw(screen)
-    sprites.update()
 
     pygame.display.flip()
     clock.tick(configs.FPS)
